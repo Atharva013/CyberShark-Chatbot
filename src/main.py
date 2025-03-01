@@ -1,22 +1,12 @@
-import os
-import json
 import streamlit as st
 import google.generativeai as genai
 import base64
 
-# Load API key from config file
-working_dir = os.path.dirname(os.path.abspath(__file__))
-config_path = os.path.join(working_dir, "config.json")
-
+# Load API key from Streamlit Secrets
 try:
-    with open(config_path, "r") as config_file:
-        config_data = json.load(config_file)
-        GEMINI_API_KEY = config_data.get("GEMINI_API_KEY", None)
-        if not GEMINI_API_KEY:
-            st.error("🚨 Gemini API key is missing in config.json!")
-            st.stop()
-except Exception as e:
-    st.error(f"Error loading config.json: {e}")
+    GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+except KeyError:
+    st.error("🚨 Gemini API key is missing in Streamlit secrets!")
     st.stop()
 
 # Configure Gemini API
